@@ -4,9 +4,10 @@ pub const DISTRIBUTION_DOMAIN: &[u8] = b"logos:lp0003:distribution:v1";
 pub const CONTEXT_DOMAIN: &[u8] = b"logos:lp0003:context:v1";
 pub const RECIPIENT_DOMAIN: &[u8] = b"logos:lp0003:recipient:v1";
 pub const CLAIM_PUBKEY_DOMAIN: &[u8] = b"logos:lp0003:claim-pubkey:v1";
+pub const NODE_DOMAIN: &[u8] = b"logos:lp0003:node:v1";
 
 #[must_use]
-pub const fn all_domains() -> [&'static [u8]; 6] {
+pub const fn all_domains() -> [&'static [u8]; 7] {
     [
         LEAF_DOMAIN,
         NULLIFIER_DOMAIN,
@@ -14,6 +15,7 @@ pub const fn all_domains() -> [&'static [u8]; 6] {
         CONTEXT_DOMAIN,
         RECIPIENT_DOMAIN,
         CLAIM_PUBKEY_DOMAIN,
+        NODE_DOMAIN,
     ]
 }
 
@@ -27,7 +29,7 @@ mod tests {
     fn domains_are_non_empty_and_distinct() {
         let domains = all_domains();
 
-        assert_eq!(domains.len(), 6);
+        assert_eq!(domains.len(), 7);
         assert!(domains.iter().all(|domain| !domain.is_empty()));
 
         let unique = domains.iter().copied().collect::<HashSet<_>>();
@@ -42,5 +44,6 @@ mod tests {
         assert_eq!(CONTEXT_DOMAIN, b"logos:lp0003:context:v1");
         assert_eq!(RECIPIENT_DOMAIN, b"logos:lp0003:recipient:v1");
         assert_eq!(CLAIM_PUBKEY_DOMAIN, b"logos:lp0003:claim-pubkey:v1");
+        assert_eq!(NODE_DOMAIN, b"logos:lp0003:node:v1");
     }
 }
