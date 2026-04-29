@@ -1,0 +1,26 @@
+{
+  "name": "eligibility-small",
+  "tree_depth": 3,
+  "distribution_id_hex": "0101010101010101010101010101010101010101010101010101010101010101",
+  "entries": [
+    {
+      "claim_secret_byte": 11,
+      "allocation": 100,
+      "leaf_salt_byte": 21,
+      "recipient": "Public/small-01"
+    },
+    {
+      "claim_secret_byte": 12,
+      "allocation": 100,
+      "leaf_salt_byte": 22,
+      "recipient": "Public/small-02"
+    },
+    {
+      "claim_secret_byte": 13,
+      "allocation": 100,
+      "leaf_salt_byte": 23,
+      "recipient": "Public/small-03"
+    }
+  ],
+  "expected_root": "40e2943c62ae84f56eef3425b0a647b4a0038866cca5fb76c57a8db0f209e95f"
+}
