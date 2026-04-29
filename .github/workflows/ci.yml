@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.94"
+          components: rustfmt, clippy
+      - name: Validate workspace skeleton
+        run: bash tests/validate_workspace_skeleton.sh
+      - name: Validate Phase 1 docs
+        run: |
+          bash tests/validate_claim_execution_adr.sh
+          bash tests/validate_whisper_wall_private_smoke.sh
+          bash tests/validate_logos_scaffold_smoke.sh
+          bash tests/validate_implementation_notes.sh
