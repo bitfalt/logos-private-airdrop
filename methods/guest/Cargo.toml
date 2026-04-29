@@ -1,14 +1,18 @@
 [package]
 name = "private_airdrop_guest"
 version = "0.1.0"
-edition.workspace = true
-license.workspace = true
-repository.workspace = true
-rust-version.workspace = true
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/bitfalt/logos-private-airdrop"
 
 [[bin]]
 name = "private_airdrop"
 path = "src/bin/private_airdrop.rs"
 
 [dependencies]
-airdrop_program.workspace = true
+borsh = "1.5"
+nssa_core = { git = "https://github.com/logos-blockchain/logos-execution-zone.git", tag = "v0.2.0-rc1" }
+risc0-zkvm = { version = "=3.0.5", features = ["std"] }
+ruint = "=1.17.0"
+serde = { version = "1.0", features = ["derive"] }
+spel-framework = { git = "https://github.com/logos-co/spel.git", tag = "v0.2.0-rc.3" }
