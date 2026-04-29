@@ -4,5 +4,6 @@ pub mod domain;
 pub mod eligibility;
 pub mod errors;
 pub mod hash;
+pub mod nullifier;
 
 pub const CRATE_NAME: &str = "airdrop_core";
