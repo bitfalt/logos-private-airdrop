@@ -2,6 +2,7 @@
 
 pub mod errors;
 pub mod state;
+pub mod validation;
 
 pub use state::{AllocationPolicy, DistributionMode, DistributionState, NullifierState};
 

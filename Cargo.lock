@@ -2448,6 +2448,7 @@ dependencies = [
  "risc0-zkvm",
  "ruint",
  "serde",
+ "sha2",
  "spel-framework",
 ]
 

@@ -72,6 +72,10 @@
               {
                 "kind": "const",
                 "value": "distribution"
+              },
+              {
+                "kind": "arg",
+                "path": "distribution_id"
               }
             ]
           }
@@ -86,6 +90,10 @@
               {
                 "kind": "const",
                 "value": "nullifier"
+              },
+              {
+                "kind": "arg",
+                "path": "nullifier_hash"
               }
             ]
           }
@@ -98,6 +106,15 @@
         }
       ],
       "args": [
+        {
+          "name": "distribution_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
         {
           "name": "nullifier_hash",
           "type": {
@@ -181,21 +198,47 @@
           }
         ]
       }
+    },
+    {
+      "name": "NullifierState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "distribution_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "nullifier",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "allocation",
+            "type": "u128"
+          },
+          {
+            "name": "claimed_at_slot_or_time",
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "types": [
-    {
-      "name": "DistributionMode",
-      "kind": "enum",
-      "variants": [
-        {
-          "name": "Airdrop"
-        },
-        {
-          "name": "AllowlistGate"
-        }
-      ]
-    },
     {
       "name": "AllocationPolicy",
       "kind": "enum",
@@ -205,6 +248,18 @@
         },
         {
           "name": "Variable"
+        }
+      ]
+    },
+    {
+      "name": "DistributionMode",
+      "kind": "enum",
+      "variants": [
+        {
+          "name": "Airdrop"
+        },
+        {
+          "name": "AllowlistGate"
         }
       ]
     }
