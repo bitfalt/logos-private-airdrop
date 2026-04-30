@@ -1,0 +1,5 @@
+{
+  "name": "LP-0003 Private Airdrop",
+  "version": "0.1.0",
+  "entry": "qml/Main.qml"
+}

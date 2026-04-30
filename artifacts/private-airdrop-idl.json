@@ -1,0 +1,86 @@
+{
+  "version": "0.1.0",
+  "name": "private_airdrop",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "distribution",
+          "writable": true,
+          "signer": false,
+          "init": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": "distribution"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": false,
+          "signer": true,
+          "init": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claim",
+      "accounts": [
+        {
+          "name": "distribution",
+          "writable": true,
+          "signer": false,
+          "init": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": "distribution"
+              }
+            ]
+          }
+        },
+        {
+          "name": "nullifier",
+          "writable": true,
+          "signer": false,
+          "init": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": "nullifier"
+              }
+            ]
+          }
+        },
+        {
+          "name": "claimant",
+          "writable": false,
+          "signer": true,
+          "init": false
+        }
+      ],
+      "args": [
+        {
+          "name": "nullifier_hash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "allocation",
+          "type": "u128"
+        }
+      ]
+    }
+  ]
+}
