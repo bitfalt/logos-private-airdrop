@@ -15,8 +15,51 @@
 - Use **user-generated claim commitments**. Users create `claim_secret`, derive `claim_pubkey`, choose `leaf_salt`, and submit only `claim_pubkey`, `leaf_salt`, `recipient_binding`, and requested/assigned allocation to the distributor.
 - Use **variable allocation v1**, with equal allocation as a convenience mode. The existing leaf model already hashes `allocation: u128`, so the core Merkle proof infrastructure does not materially change.
 - Treat allocation as **public at claim time** for v1. Hiding allocation would require a more complex shielded transfer/accounting design and should be a later enhancement.
-- Document that unique allocations reduce anonymity. If only one user has allocation `777`, observers can infer that any claim for `777` came from that allocation bucket even if they cannot identify the private account.
+- Document that **variable allocation hurts privacy while equal allocation preserves the largest anonymity set**. If every claimant receives `100`, the public amount does not split the claimant set. If one user receives `777`, observers can infer that any claim for `777` came from that one allocation bucket even if they cannot identify the private account.
+- Compare this explicitly to shielded-balance protocols such as RAILGUN: RAILGUN-style private transfers aim to hide sender, recipient, token, and amount inside encrypted notes/UTXOs and ZK proofs. LP-0003 v1 is weaker when variable allocations are public, because amount buckets can become linkability hints. Equal-allocation distributions are the recommended high-privacy mode; variable-allocation distributions are a usability feature with documented leakage.
 - Distributor-blindness is **conditional**. If users submit commitments over an anonymous channel, the distributor learns only commitments, allocations, set size, and metadata. If users submit through email/Discord/KYC, the distributor can map commitment to person off-chain. The implementation must state this precisely.
+
+## LP-0003 Success Criteria Coverage
+
+This plan is keyed directly to the upstream LP-0003 success criteria. A task is not complete unless its validation command proves the relevant row below.
+
+| LP-0003 criterion | Plan coverage | Required proof before submission |
+| --- | --- | --- |
+| Distributor commits to eligibility set on-chain without revealing individual addresses | Tasks 2, 4, 6, 7 | Distribution account stores `merkle_root`, `distribution_id`, policy, counts, not addresses. E2E creates distribution on LEZ localnet/testnet. |
+| Eligible recipient claims allocation without revealing which address in set they hold | Tasks 3, 5, 7, 8 | Private `Private/` claim path consumes witness locally and publishes only nullifier/output. Demo captures private proof with `RISC0_DEV_MODE=0`. |
+| Double-claim prevention via nullifiers | Tasks 1, 3, 5, 7 | `double_claim_rejected` E2E passes and nullifier state is written only once. |
+| Observer cannot link completed claim to specific eligible address | Tasks 3, 5, 8, 10 | Privacy model and demo show witness fields are not public; docs define remaining amount-bucket leakage. |
+| Full privacy model | Task 10 | `docs/privacy-model.md` covers observers, distributor, claimants, off-chain collection, equal vs variable allocation leakage, and precise threat model. |
+| Working LEZ reference integration on testnet/devnet/localnet | Tasks 7, 11 | Local sequencer E2E, then recorded LEZ testnet/devnet program id and transactions. |
+| 3 outside-party distributions and 30 unique claims | Task 11 | `submission/external-distributions.md` records parties, roots, claim counts, and evidence. |
+| SDK/module for Logos builders | Task 9 | `cargo test -p lp0003-sdk` and integration-guide examples pass. |
+| Basecamp GUI | Task 9 | `bash scripts/launch-basecamp.sh --check` plus UI docs. |
+| SPEL IDL | Tasks 4, 5 | `make idl`, committed `artifacts/private-airdrop-idl.json`, validator checks real instructions. |
+| Proof generation failure handling | Tasks 6, 8, 10 | CLI surfaces deterministic proof errors; docs explain retry behavior. |
+| Failed/rejected claim does not mark claimed | Tasks 5, 7 | `failed_claim_retry` E2E proves no nullifier state is written on failed claims. |
+| Deterministic documented errors | Tasks 1, 5, 10 | Error constants, validation tests, and docs agree. |
+| CU and proof benchmarks | Task 8 | `docs/benchmarks.md` includes operation costs/timings from real runs. |
+| E2E tests against standalone LEZ sequencer in CI | Tasks 7, 10 | CI runs standalone local sequencer tests or documents exact blocker with GitHub issue. |
+| Green CI on default branch | Task 10 | `scripts/verify-submission.sh` and GitHub Actions pass. |
+| README end-to-end usage | Task 10 | README includes deploy, program ids, CLI, Basecamp, and demo steps. |
+| Demo script with `RISC0_DEV_MODE=0` | Task 8 | `scripts/demo-e2e-real-proof.sh` succeeds on clean machine. |
+| Narrated demo video | Task 11 | `submission/demo-video-url.txt` links video showing terminal proof generation and `RISC0_DEV_MODE=0`. |
+| MIT/Apache licensing | Already present; Task 10 revalidates | `LICENSE-MIT`, `LICENSE-APACHE`, and README licensing section. |
+| GitHub issues for Logos blockers | Tasks 7, 10 | Known blockers reference open upstream issues and current status. |
+| FURPS self-assessment | Task 10 | `docs/furps.md` and submission write-up complete. |
+
+## Logos Stack Usage Requirements
+
+The implementation must keep using the real Logos stack rather than a standalone proof demo:
+
+- LEZ private execution is the primary claim circuit path.
+- SPEL macros and IDL define the program interface.
+- RISC Zero guest builds produce the deployed ELF.
+- Logos Scaffold manages local standalone sequencer validation.
+- `Private/` account claims and `PrivacyPreservingTransaction` behavior are used for claim privacy.
+- If a private claim emits a chained transfer, SPEL dependency flags such as `--bin-auth-transfer` are required.
+- Basecamp/QML is the evaluator-facing GUI path.
+- Any blocker in LEZ/SPEL/Scaffold/Basecamp must be documented as a GitHub issue instead of bypassed with invented APIs.
 
 ## File Map
 
@@ -587,6 +630,8 @@ Create `tests/validate_submission_docs.sh` requiring:
 - observer knowledge section
 - shielded account advantage over public Merkle baseline
 - variable allocation leakage warning
+- equal allocation recommended for strongest anonymity set
+- RAILGUN-style shielded amount comparison
 - failed claim retry guarantee
 - `RISC0_DEV_MODE=0` demo instructions
 - external distribution checklist
@@ -601,6 +646,17 @@ Expected: fail until docs are complete.
 - [ ] **Step 3: Complete docs**
 
 Write precise, non-marketing documentation. Include exact commands and known trade-offs.
+
+The privacy docs must include this exact claim in substance:
+
+```text
+Equal allocations preserve the broadest claim anonymity set because the public
+amount does not partition claimants. Variable allocations are supported for
+real-world usability, but any public unique or rare allocation amount can shrink
+the anonymity set to that allocation bucket. Unlike RAILGUN-style shielded
+transfers where amount can be hidden inside encrypted notes and proofs, LP-0003
+v1 treats allocation as public unless a future shielded transfer mode is added.
+```
 
 - [ ] **Step 4: Run final verification**
 
