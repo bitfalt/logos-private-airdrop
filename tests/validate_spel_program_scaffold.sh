@@ -23,6 +23,10 @@ grep -Fq "#[instruction]" methods/guest/src/bin/private_airdrop.rs
 grep -Fq "private-airdrop-idl.json" spel.toml
 grep -Fq "cargo risczero build" Makefile
 grep -Fq "spel generate-idl" Makefile
+grep -Fq '"name": "initialize_distribution"' artifacts/private-airdrop-idl.json
+grep -Fq '"name": "claim"' artifacts/private-airdrop-idl.json
+grep -Fq '"name": "merkle_root"' artifacts/private-airdrop-idl.json
+grep -Fq '"name": "allocation_policy"' artifacts/private-airdrop-idl.json
 
 (cd /tmp && spel inspect "$repo_root/target/riscv32im-risc0-zkvm-elf/docker/private_airdrop.bin" >/dev/null)
 

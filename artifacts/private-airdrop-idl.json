@@ -3,7 +3,7 @@
   "name": "private_airdrop",
   "instructions": [
     {
-      "name": "initialize",
+      "name": "initialize_distribution",
       "accounts": [
         {
           "name": "distribution",
@@ -15,6 +15,10 @@
               {
                 "kind": "const",
                 "value": "distribution"
+              },
+              {
+                "kind": "arg",
+                "path": "distribution_id"
               }
             ]
           }
@@ -26,7 +30,34 @@
           "init": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "distribution_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "merkle_root",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "allocation_policy",
+          "type": "u8"
+        },
+        {
+          "name": "total_eligible",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "claim",
@@ -79,6 +110,101 @@
         {
           "name": "allocation",
           "type": "u128"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "DistributionState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "authority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "distribution_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "merkle_root",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "mode",
+            "type": {
+              "defined": "DistributionMode"
+            }
+          },
+          {
+            "name": "allocation_policy",
+            "type": {
+              "defined": "AllocationPolicy"
+            }
+          },
+          {
+            "name": "total_eligible",
+            "type": "u64"
+          },
+          {
+            "name": "total_claimed",
+            "type": "u64"
+          },
+          {
+            "name": "created_at_slot_or_time",
+            "type": "u64"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "DistributionMode",
+      "kind": "enum",
+      "variants": [
+        {
+          "name": "Airdrop"
+        },
+        {
+          "name": "AllowlistGate"
+        }
+      ]
+    },
+    {
+      "name": "AllocationPolicy",
+      "kind": "enum",
+      "variants": [
+        {
+          "name": "Equal"
+        },
+        {
+          "name": "Variable"
         }
       ]
     }
