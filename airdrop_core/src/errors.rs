@@ -16,4 +16,6 @@ pub enum AirdropCoreError {
     MerkleDepthTooLarge(usize),
     #[error("merkle proof index {index} out of bounds for {leaf_count} leaves")]
     MerkleProofIndexOutOfBounds { index: usize, leaf_count: usize },
+    #[error("equal allocation manifest contains mixed allocations")]
+    EqualAllocationMixed,
 }
