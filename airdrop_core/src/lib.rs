@@ -1,5 +1,6 @@
 //! Core LP-0003 cryptographic primitives.
 
+pub mod claim;
 pub mod distribution;
 pub mod domain;
 pub mod eligibility;
