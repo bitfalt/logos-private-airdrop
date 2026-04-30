@@ -4,6 +4,9 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repo_root"
 
+source scripts/risc0-localnet-env.sh
+lp0003_print_risc0_localnet_env
+
 logos-scaffold init || true
 logos-scaffold setup
 
